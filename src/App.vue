@@ -41,6 +41,44 @@ const weatherCodeMap = {
   99: "Thunderstorm with heavy hail"
 }
 
+const weatherIconMap = {
+  0: "clear",
+  1: "clear",
+  2: "mostly-clear",
+  3: "overcast",
+
+  45: "fog",
+  48: "fog",
+
+  51: "drizzle-light",
+  53: "drizzle-light",
+  55: "drizzle-heavy",
+  56: "drizzle-light",
+
+  61: "rain",
+  63: "rain",
+  65: "rain-heavy",
+  66: "rain",
+  67: "rain-heavy",
+  71: "snow",
+  73: "snow",
+  75: "snow-heavy",
+  77: "snow",
+
+  80: "rain",
+  81: "rain",
+  82: "rain-heavy", 
+
+  85: "snow",             
+  86: "snow-heavy",        
+
+  95: "thunderstorm-rain",
+  96: "thunderstorm-rain",
+  99: "thunderstorm-rain"
+}
+
+
+
 
   async function fetchWeather(){
     const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=14.6042&longitude=120.9822&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max")
@@ -63,10 +101,14 @@ const weatherCodeMap = {
       }
     })
 
-    console.log(weatherData.value)
 
     
   }
+
+  function getWeatherIcon(weatherCode) {
+  const iconName = weatherIconMap[weatherCode] || 'clear'
+  return new URL(`./assets/icons/day/${iconName}.svg`, import.meta.url).href
+}
 
   onMounted(()=>{
     fetchWeather()
@@ -82,10 +124,10 @@ const weatherCodeMap = {
     <h1>Weather Forecast</h1>
 
     <div class="weather-card" v-for="dailyWeather, index in weatherData">
-
+      
       <div class="weather-header">
       <div class="weather-header-content">
-        <div class="weather-icon">.</div>
+        <img class="weather-icon" :src="getWeatherIcon(dailyWeather.weather_code)"></img>
         <div class="weather-header-info">
           <div>
 
@@ -153,7 +195,7 @@ const weatherCodeMap = {
   .weather-icon{
     width: 100px;
     height: 100px;
-    background-color: lightblue;
+    background-color: rgb(255, 255, 255);
   }
 
   .weather-body{
